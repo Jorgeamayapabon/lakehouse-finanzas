@@ -221,3 +221,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Proyecto lakehouse-finanzas ---
+# Datos: NUNCA al repo (aunque estén anonimizados)
+data/
+*.xlsx
+*.csv
+# Secretos (sal del anonimizador)
+*.sal
+# Databricks CLI / bundles
+.databricks/
