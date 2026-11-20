@@ -1,7 +1,7 @@
 [project]
 name = "lakehouse-finanzas"
 version = "0.1.0"
-description = "Add your description here"
+description = "Lakehouse de finanzas personales (PoC) con Databricks"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

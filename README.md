@@ -36,16 +36,16 @@ data/                        # ignorado por git
 
 ### 1. Preparar los datos (local)
 ```bash
-pip install -r requirements.txt
+uv sync
 
 # Anonimizar el extracto real. Guarda la sal fuera del repo y reutilízala siempre.
-python tools/anonimizar_extracto.py ruta/19778070882_SEP2026.xlsx --sal "<tu-sal>" --salida data/landing
+uv run tools/anonimizar_extracto.py ruta/19778070882_SEP2026.xlsx --sal "<tu-sal>" --salida data/landing
 
 # Generar 2 trimestres sintéticos que continúan desde el saldo final del real
-python tools/generar_extractos.py --continuar-de data/landing/EXTRACTO_0882_SEP2026.xlsx --trimestres 2 --salida data/landing
+uv run tools/generar_extractos.py --continuar-de data/landing/EXTRACTO_0882_SEP2026.xlsx --trimestres 2 --salida data/landing
 
 # Archivo con errores para probar calidad (Día 3)
-python tools/generar_extractos.py --desde 2027-04-01 --saldo-inicial 3000000 --errores --salida data/pruebas --semilla 7
+uv run tools/generar_extractos.py --desde 2027-04-01 --saldo-inicial 3000000 --errores --salida data/pruebas --semilla 7
 ```
 
 ### 2. Databricks Free Edition
