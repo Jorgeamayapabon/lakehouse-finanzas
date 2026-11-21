@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md
 # MAGIC # 00 · Setup del lakehouse de finanzas
 # MAGIC
@@ -73,5 +77,8 @@ print(f"Sube tus extractos a: {ruta_landing}")
 
 # COMMAND ----------
 
-display(spark.sql("SHOW SCHEMAS"))
+catalogo = dbutils.widgets.get("catalogo")
+ruta_landing = f"/Volumes/{catalogo}/bronze/landing/extractos/"
+
+display(spark.sql(f"SHOW SCHEMAS IN {catalogo}"))
 display(dbutils.fs.ls(ruta_landing))
