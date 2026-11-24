@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md
 # MAGIC # 01 · Bronze: ingesta incremental de extractos
 # MAGIC
@@ -97,6 +101,8 @@ CREATE TABLE IF NOT EXISTS {T_RESUMEN} (
 
 from pyspark.sql import functions as F
 
+antes = spark.table(T_ARCHIVOS).count()
+
 nuevos = (
     spark.readStream.format("cloudFiles")
     .option("cloudFiles.format", "binaryFile")
@@ -121,8 +127,12 @@ query = (
 )
 query.awaitTermination()
 
-n_nuevos = sum(p["numInputRows"] for p in query.recentProgress)
+n_nuevos = spark.table(T_ARCHIVOS).count() - antes
 print(f"Archivos nuevos detectados por Auto Loader: {n_nuevos}")
+
+# COMMAND ----------
+
+display(spark.table(T_ARCHIVOS).select("_archivo", "_tamano_bytes", "_ingestado_en"))
 
 # COMMAND ----------
 
@@ -258,3 +268,11 @@ try:
     display(spark.read.format("excel").load(RUTA_LANDING).limit(25))
 except Exception as e:
     print(f"El lector nativo no está disponible en este workspace: {e}")
+
+# COMMAND ----------
+
+display(spark.sql(f"""
+SELECT 'versión 1' AS version, count(*) AS filas FROM {T_RAW} VERSION AS OF 1
+UNION ALL
+SELECT 'versión 2', count(*) FROM {T_RAW} VERSION AS OF 2
+"""))
