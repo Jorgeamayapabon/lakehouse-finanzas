@@ -97,8 +97,6 @@ class Generador:
             ev.append(("PAGO PSE GASES DEL CARIBE S", None, -r.randint(28000, 65000)))
         if dia == 18:
             ev.append(("PAGO PSE CARIBEMAR DE LA COS", None, -r.randint(150000, 320000)))
-        if dia == 20 and r.random() < 0.6:
-            ev.append(("PAGO DE PROV PEXTO COLOMBIA", None, -r.randint(10, 40) * 10000))
         # --- Gasto variable ---
         for _ in range(r.choices([0, 1, 2], [0.65, 0.28, 0.07])[0]):
             ev.append(("TRANSFERENCIAS A NEQUI", None, -r.choice([5, 6, 10, 13, 20, 27, 30, 40, 50, 75, 100]) * 1000))
@@ -158,7 +156,8 @@ def escribir_xlsx(path: Path, desde: date, hasta: date, cuenta: str, movs, res) 
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Table1"
-    info_general = [f"{desde:%Y/%m/%d}", f"{hasta:%Y/%m/%d}", TIPO_CUENTA, cuenta, SUCURSAL]
+    # Como el banco: DESDE es el último día del periodo anterior (ej. 2026/06/30 para jul-sep)
+    info_general = [f"{desde - timedelta(days=1):%Y/%m/%d}", f"{hasta:%Y/%m/%d}", TIPO_CUENTA, cuenta, SUCURSAL]
 
     def bloque(con_resumen: bool):
         ws.append(["Información Cliente:"])
